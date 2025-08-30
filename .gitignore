@@ -1,0 +1,22 @@
+# Build folders
+bin/
+obj/
+
+# User-specific files
+*.user
+*.suo
+*.userprefs
+
+# VS Code or VS settings
+.vscode/
+.vs/
+
+# Logs
+*.log
+
+# Publish output
+publish/
+
+# Temporary files
+*.tmp
+.vscode/
