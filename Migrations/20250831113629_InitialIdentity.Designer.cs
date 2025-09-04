@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyApp.Data;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace matrimony_api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250831113629_InitialIdentity")]
+    partial class InitialIdentity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,6 +24,45 @@ namespace matrimony_api.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("MyApp.Models.AuthUser", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("text")
+                        .HasColumnName("email");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("password_hash");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("role");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("user_name");
+
+                    b.HasKey("Id")
+                        .HasName("pk_auth_users");
+
+                    b.ToTable("auth_users", (string)null);
+                });
 
             modelBuilder.Entity("MyApp.Models.UserFiles", b =>
                 {
@@ -54,26 +96,30 @@ namespace matrimony_api.Migrations
 
             modelBuilder.Entity("MyApp.Models.UserProfile", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int?>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasColumnName("id");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int?>("Id"));
 
                     b.Property<string>("Bio")
+                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("bio");
 
                     b.Property<string>("Caste")
+                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("caste");
 
                     b.Property<string>("City")
+                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("city");
 
                     b.Property<string>("Country")
+                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("country");
 
@@ -86,10 +132,12 @@ namespace matrimony_api.Migrations
                         .HasColumnName("date_of_birth");
 
                     b.Property<string>("Education")
+                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("education");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("email");
 
@@ -131,21 +179,17 @@ namespace matrimony_api.Migrations
                         .HasColumnName("marital_status");
 
                     b.Property<string>("MotherTongue")
+                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("mother_tongue");
 
                     b.Property<string>("Occupation")
+                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("occupation");
 
-                    b.Property<string>("PasswordHash")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("password_hash");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("text")
+                    b.Property<long>("PhoneNumber")
+                        .HasColumnType("bigint")
                         .HasColumnName("phone_number");
 
                     b.Property<string>("Rasi")
@@ -158,21 +202,18 @@ namespace matrimony_api.Migrations
                         .HasColumnType("text")
                         .HasColumnName("religion");
 
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("role");
-
                     b.Property<string>("Star")
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("star");
 
                     b.Property<string>("State")
+                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("state");
 
                     b.Property<string>("Subcaste")
+                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("subcaste");
 
@@ -180,14 +221,35 @@ namespace matrimony_api.Migrations
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("updated_at");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("user_id");
+
                     b.Property<string>("WorkLocation")
+                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("work_location");
 
                     b.HasKey("Id")
                         .HasName("pk_users");
 
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("ix_users_user_id");
+
                     b.ToTable("users", (string)null);
+                });
+
+            modelBuilder.Entity("MyApp.Models.UserProfile", b =>
+                {
+                    b.HasOne("MyApp.Models.AuthUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_users_auth_users_user_id");
+
+                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }

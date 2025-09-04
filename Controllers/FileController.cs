@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [Route("api/[controller]")]
@@ -36,19 +37,19 @@ public class FileController : ControllerBase
     [HttpGet("download/{id}")]
     public IActionResult DownloadFile(int id)
     {
-            var uploadsFolder = Path.Combine(_environment.ContentRootPath, "Uploads", $"{id}");
-            var folderPath = Path.Combine(uploadsFolder);
-            if (!Directory.Exists(folderPath))
-                return NotFound("User folder not found.");
-            var files = Directory.GetFiles(folderPath);
-            if (files.Length == 0)
-                return NotFound("No files found for this user.");
-            var filePath = Path.Combine(uploadsFolder,files[0]); // Get the first file
-            if (!System.IO.File.Exists(filePath))
-                return NotFound("File not found.");
-            var contentType = GetContentType(filePath);
-            return PhysicalFile(filePath, contentType);
-        }
+        var uploadsFolder = Path.Combine(_environment.ContentRootPath, "Uploads", $"{id}");
+        var folderPath = Path.Combine(uploadsFolder);
+        if (!Directory.Exists(folderPath))
+            return NotFound("User folder not found.");
+        var files = Directory.GetFiles(folderPath);
+        if (files.Length == 0)
+            return NotFound("No files found for this user.");
+        var filePath = Path.Combine(uploadsFolder, files[0]); // Get the first file
+        if (!System.IO.File.Exists(filePath))
+            return NotFound("File not found.");
+        var contentType = GetContentType(filePath);
+        return PhysicalFile(filePath, contentType);
+    }
 
         private string GetContentType(string path)
         {
