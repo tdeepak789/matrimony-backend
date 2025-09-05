@@ -1,0 +1,19 @@
+Logout api in backend
+Update Password api in backend
+Update profile picture api and storage in backend
+Update PhoneNumber api in backend
+forgot password api
+Interests api (sent & receive)
+preferences api
+include userid in create user profile and login api response body to navigate to user-details page.
+
+
+Frontend
+->include Logout button ->done
+->remove Password field from edit profile ->wip
+->section wise edit option in edit profile ->wip in user-details page
+->including nav bar - done (need modifications)
+->inlude home page 
+->Interests screen (Interests sent & Interests received)
+->preferences screen
+-->multi page user registration (done)
