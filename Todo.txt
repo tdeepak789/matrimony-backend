@@ -17,3 +17,6 @@ Frontend
 ->Interests screen (Interests sent & Interests received)
 ->preferences screen
 -->multi page user registration (done)
+-->multi page form validation during user registration
+-->create new git branch for frontend
+-->avoid navigating to user-list page when user logged out.
