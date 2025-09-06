@@ -9,14 +9,20 @@ include userid in create user profile and login api response body to navigate to
 
 
 Frontend
-->include Logout button ->done
-->remove Password field from edit profile ->wip
-->section wise edit option in edit profile ->wip in user-details page
-->including nav bar - done (need modifications)
-->inlude home page 
-->Interests screen (Interests sent & Interests received)
-->preferences screen
--->multi page user registration (done)
--->multi page form validation during user registration
--->create new git branch for frontend
+-->include Logout button ->done
+-->remove Password field from edit profile ->wip
+-->section wise edit option in edit profile ->done
+-->including nav bar - done 
+-->inlude home page 
+-->Interests screen (Interests sent & Interests received)
+-->preferences screen
+--->multi page user registration (done)
+-->multi page form validation during user registration (done )
+-->create new git branch for frontend (done)
 -->avoid navigating to user-list page when user logged out.
+-->include age field in forntend and hide dob fields for end users.
+-->include button for 'Interested'
+--> Preferences view in user details page
+
+-->modify userlist response from backend for end users, mobile number should not come and age should come from backend and then do not send sate of birth
+

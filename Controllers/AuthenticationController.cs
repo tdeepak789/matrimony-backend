@@ -21,11 +21,11 @@ public class AuthController : ControllerBase
     {
 
         var result = await _userService.ValidateUserCredentials(dto);
-        if (result == null)
+        if (result.token == null)
         {
             return Unauthorized(new { message = "Invalid username or password" });
         }
-        return Ok( new { token = result } );
+        return Ok( new { token = result.token, userId = result.userId } );
     }
 }
 

@@ -100,12 +100,12 @@ public class UserController : ControllerBase
         }
 
 
-        var jwttoken = _userService.CreateUserProfile(newUserProfile);
-        if (jwttoken == null)
+        var result = _userService.CreateUserProfile(newUserProfile);
+        if (result.token == null)
         {
             return BadRequest("User Profile Already Created");
         }
-        return Created("", new { token = jwttoken });
+        return Created("", new { token = result.token, userId = result.userId });
     }
 
     [HttpPut("profiles/{id}")]

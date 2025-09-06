@@ -38,7 +38,7 @@ public class UserService
         return _context.Users.Where(user => user.Id == id && user.IsActive == 1).FirstOrDefault();
     }
 
-    public string CreateUserProfile(UserProfile newUserProfile)
+    public (string token,int userId) CreateUserProfile(UserProfile newUserProfile)
     {
 
         var existingProfile = _context.Users.Where(user => user.Id == newUserProfile.Id).FirstOrDefault();
@@ -53,7 +53,7 @@ public class UserService
         _context.Users.Add(newUserProfile);
         _context.SaveChanges();
         var token = GenerateJwt(newUserProfile);
-        return token;
+        return (token,newUserProfile.Id);
     }
 
     public async Task<UserProfile> UpdateUserProfile(int id, UserProfileDto updatedUserProfile)
@@ -108,7 +108,7 @@ public class UserService
     }
    
 
-    public async Task<string> ValidateUserCredentials(LoginDto loginDto)
+    public async Task<(string token,int userId)> ValidateUserCredentials(LoginDto loginDto)
     {
 
         UserProfile userProfile = await _context.Users.Where(usr => (usr.PhoneNumber == loginDto.UserName) || (!string.IsNullOrEmpty(usr.Email) && usr.Email.ToLower() == loginDto.UserName.ToLower())).FirstOrDefaultAsync();
@@ -119,7 +119,7 @@ public class UserService
         if (!BCrypt.Net.BCrypt.Verify(loginDto.Password, userProfile.PasswordHash))
             throw new Exception("Invalid credentials");
         string token = GenerateJwt(userProfile);
-        return token;
+        return (token,userProfile.Id);
     }
     private string GenerateJwt(UserProfile user)
     {
