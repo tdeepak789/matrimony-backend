@@ -13,6 +13,7 @@ namespace MyApp.Data
         // Example DbSet for a User entity
         public DbSet<UserProfile> Users { get; set; }
         public DbSet<UserFiles> UserFiles { get; set; }
+        public DbSet<UserInterestedProfiles> UserInterests { get; set; }
 
         // Add other DbSets as needed
         // public DbSet<Profile> Profiles { get; set; }
