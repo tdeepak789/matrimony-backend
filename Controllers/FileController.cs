@@ -13,12 +13,14 @@ public class FileController : ControllerBase
     }
 
     [HttpPost("upload/{id}")]
-    public async Task<IActionResult> UploadFile(List<IFormFile> files, int id)
+    public async Task<IActionResult> UploadFile([FromForm] List<IFormFile> files, int id)
     {
         if (files == null || files.Count == 0)
             return BadRequest("No file uploaded.");
 
-        var uploadsFolder = Path.Combine(_environment.ContentRootPath, "Uploads", $"{id}");
+        // Using ContentRootPath is good, but ensure the "Uploads" folder exists at the root
+        var uploadsFolder = Path.Combine(_environment.ContentRootPath, "Uploads", id.ToString());
+        
         if (!Directory.Exists(uploadsFolder))
         {
             Directory.CreateDirectory(uploadsFolder);
@@ -26,12 +28,15 @@ public class FileController : ControllerBase
         
         foreach (var file in files)
         {
-            var filePath = Path.Combine(uploadsFolder, file.FileName);
+            // Security Tip: Use a safe filename or GUID to prevent directory traversal attacks
+            var safeFileName = Path.GetFileName(file.FileName);
+            var filePath = Path.Combine(uploadsFolder, safeFileName);
+            
             using var stream = new FileStream(filePath, FileMode.Create);
             await file.CopyToAsync(stream);
         }
 
-        return Ok(new { Message = $"{files.Count} files uploaded" });
+        return Ok(new { Message = $"{files.Count} files uploaded successfully" });
     }
 
     [HttpGet("download/{id}")]

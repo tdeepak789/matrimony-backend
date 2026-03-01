@@ -130,7 +130,7 @@ public class UserService
         {
             new Claim(ClaimTypes.Role, user.Role),
             new Claim("userProfileId",Convert.ToString(user.Id)),
-            new Claim("FirstNamw",user.FirstName),
+            new Claim("FirstName",user.FirstName),
             new Claim("LastName",user.LastName),
             new Claim("Gender", user.Gender)
         };

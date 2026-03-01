@@ -1,10 +1,10 @@
-Logout api in backend
-Update Password api in backend
-Update profile picture api and storage in backend
-Update PhoneNumber api in backend
-forgot password api
-Interests api (sent & receive)
-preferences api
+Logout api in backend - TODO
+Update Password api in backend - TODO
+Update profile picture api and storage in backend - BUG
+Update PhoneNumber api in backend - TODO
+forgot password api - TODO
+Interests api (sent & receive)  done
+preferences api - TODO
 include userid in create user profile and login api response body to navigate to user-details page.
 
 
@@ -15,8 +15,8 @@ Frontend
 -->including nav bar - done 
 -->inlude home page 
 -->Interests screen (Interests sent & Interests received)
--->preferences screen
---->multi page user registration (done)
+-->preferences screen - TODO
+--->multi page user registration (done) - UI update is pending
 -->multi page form validation during user registration (done )
 -->create new git branch for frontend (done)
 -->avoid navigating to user-list page when user logged out.
