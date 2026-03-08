@@ -3,16 +3,16 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
 # Copy project file and restore dependencies
-COPY ["matrimony_api.csproj", "./"]
-RUN dotnet restore "./matrimony_api.csproj"
+COPY ["matrimony-api.csproj", "./"]
+RUN dotnet restore "./matrimony-api.csproj"
 
 # Copy all files and build in Release mode
 COPY . .
-RUN dotnet build "matrimony_api.csproj" -c Release -o /app/build
+RUN dotnet build "matrimony-api.csproj" -c Release -o /app/build
 
 # STAGE 2: Publish
 FROM build AS publish
-RUN dotnet publish "matrimony_api.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "matrimony-api.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 # STAGE 3: Final Runtime
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
@@ -24,4 +24,4 @@ ENV ASPNETCORE_URLS=http://+:8080
 ENV ASPNETCORE_ENVIRONMENT=Production
 
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "matrimony_api.dll"]
+ENTRYPOINT ["dotnet", "matrimony-api.dll"]
