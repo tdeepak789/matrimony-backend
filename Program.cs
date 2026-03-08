@@ -103,6 +103,7 @@ builder.Services.AddSwaggerGen(c =>
 });
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 builder.WebHost.UseUrls($"http://*:{port}");
+builder.Services.AddHealthChecks();
 // ==================== Build App ====================
 var app = builder.Build();
 app.Services.CreateScope().ServiceProvider.GetRequiredService<AppDbContext>().Database.Migrate();
@@ -123,5 +124,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHealthChecks("/health");
 
 app.Run();
