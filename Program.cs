@@ -11,8 +11,6 @@ using System.Security.Cryptography;
 var builder = WebApplication.CreateBuilder(args);
 
 // ==================== JWT Key ====================
-Console.WriteLine("========Generated Secret Key========");
-Console.WriteLine(Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)));
 
 var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]);
 
@@ -57,13 +55,12 @@ builder.Services.AddAuthentication(options =>
 // ==================== CORS ====================
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAngular",
-        policy =>
-        {
-            policy.WithOrigins("http://localhost:4200")
-                  .AllowAnyMethod()
-                  .AllowAnyHeader();
-        });
+    options.AddPolicy("AllowAngular", policy =>
+    {
+        policy.AllowAnyOrigin() // This allows any URL to connect
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
 });
 
 // ==================== Swagger ====================
@@ -104,10 +101,11 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 });
-
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+builder.WebHost.UseUrls($"http://*:{port}");
 // ==================== Build App ====================
 var app = builder.Build();
-
+app.Services.CreateScope().ServiceProvider.GetRequiredService<AppDbContext>().Database.Migrate();
 app.UseCors("AllowAngular");
 
 // Swagger middleware
