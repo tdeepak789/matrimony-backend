@@ -8,7 +8,8 @@ public class UserFiles
     [Key]
     public Guid Id { get; set; }
     public int UserProfileId { get; set; }
-    public string FileName { get; set; }
+    public string FileName { get; set; } = string.Empty;
+    public string FilePath { get; set; } = string.Empty;
     public int SortOrder { get; set; }
     public short IsActive { get; set; } = 1;
 }
