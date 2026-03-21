@@ -19,21 +19,41 @@ public class UserController : ControllerBase
 
     [HttpGet("profiles")]
     [Authorize]
-    public async Task<ActionResult<List<UserProfileDto>>> GetUserProfiles()
+    public async Task<ActionResult<PagedResponseDto<UserProfileDto>>> GetUserProfiles(
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10,
+        [FromQuery] string? search = null,
+        [FromQuery] string? gender = null,
+        [FromQuery] string? religion = null,
+        [FromQuery] string? caste = null,
+        [FromQuery] string? maritalStatus = null)
     {
         string? userRoleClaim = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
         string? userGenderClaim = User.FindFirst("Gender")?.Value;
-        List<UserProfile> profiles = await _userService.GetAllUserProfiles(userRoleClaim,userGenderClaim);
-        if (profiles == null)
-        {
-            return new List<UserProfileDto>();
-        }
-        List<UserProfileDto> userProfileDtos = new List<UserProfileDto>();
-        foreach (UserProfile user in profiles)
+        var (profiles, totalCount) = await _userService.GetPagedUserProfiles(
+            userRoleClaim,
+            userGenderClaim,
+            page,
+            pageSize,
+            search,
+            gender,
+            religion,
+            caste,
+            maritalStatus);
+
+        var userProfileDtos = new List<UserProfileDto>();
+        foreach (var user in profiles)
         {
             userProfileDtos.Add(ToUserProfileDto(user));
         }
-        return Ok(userProfileDtos);
+
+        return Ok(new PagedResponseDto<UserProfileDto>
+        {
+            Items = userProfileDtos,
+            TotalCount = totalCount,
+            Page = page,
+            PageSize = pageSize
+        });
 
     }
 

@@ -33,6 +33,69 @@ public class UserService
         return await _context.Users.Where(user => user.IsActive == 1 && user.Gender!=userGenderClaim).ToListAsync();
     }
 
+    public async Task<(List<UserProfile> Users, int TotalCount)> GetPagedUserProfiles(
+        string? userRoleClaim,
+        string? userGenderClaim,
+        int page,
+        int pageSize,
+        string? search,
+        string? gender,
+        string? religion,
+        string? caste,
+        string? maritalStatus)
+    {
+        var sanitizedPage = page < 1 ? 1 : page;
+        var sanitizedPageSize = pageSize < 1 ? 10 : Math.Min(pageSize, 100);
+
+        IQueryable<UserProfile> query = _context.Users.AsNoTracking().Where(user => user.IsActive == 1);
+
+        if (userRoleClaim != "Admin")
+        {
+            query = query.Where(user => user.Gender != userGenderClaim);
+        }
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            var normalizedSearch = search.Trim().ToLower();
+            query = query.Where(user =>
+                (user.FirstName + " " + user.LastName).ToLower().Contains(normalizedSearch) ||
+                (!string.IsNullOrEmpty(user.FirstName) && user.FirstName.ToLower().Contains(normalizedSearch)) ||
+                (!string.IsNullOrEmpty(user.LastName) && user.LastName.ToLower().Contains(normalizedSearch)));
+        }
+
+        if (!string.IsNullOrWhiteSpace(gender))
+        {
+            query = query.Where(user => user.Gender == gender);
+        }
+
+        if (!string.IsNullOrWhiteSpace(religion))
+        {
+            query = query.Where(user => user.Religion == religion);
+        }
+
+        if (!string.IsNullOrWhiteSpace(caste))
+        {
+            var normalizedCaste = caste.Trim().ToLower();
+            query = query.Where(user => user.Caste != null && user.Caste.ToLower().Contains(normalizedCaste));
+        }
+
+        if (!string.IsNullOrWhiteSpace(maritalStatus))
+        {
+            query = query.Where(user => user.MaritalStatus == maritalStatus);
+        }
+
+        var totalCount = await query.CountAsync();
+
+        var users = await query
+            .OrderByDescending(user => user.UpdatedAt)
+            .ThenByDescending(user => user.Id)
+            .Skip((sanitizedPage - 1) * sanitizedPageSize)
+            .Take(sanitizedPageSize)
+            .ToListAsync();
+
+        return (users, totalCount);
+    }
+
     public UserProfile? GetUserProfileById(int id)
     {
         return _context.Users.Where(user => user.Id == id && user.IsActive == 1).FirstOrDefault();
