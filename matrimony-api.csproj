@@ -28,4 +28,11 @@
        
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="SeedData\metadata.seed.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

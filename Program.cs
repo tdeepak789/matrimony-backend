@@ -29,6 +29,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<InterestService>();
+builder.Services.AddScoped<MetaDataService>();
 
 // ==================== JWT Authentication ====================
 builder.Services.AddAuthentication(options =>
@@ -107,7 +108,15 @@ builder.WebHost.UseUrls($"http://*:{port}");
 builder.Services.AddHealthChecks();
 // ==================== Build App ====================
 var app = builder.Build();
-app.Services.CreateScope().ServiceProvider.GetRequiredService<AppDbContext>().Database.Migrate();
+using (var scope = app.Services.CreateScope())
+{
+    var scopedServices = scope.ServiceProvider;
+    var dbContext = scopedServices.GetRequiredService<AppDbContext>();
+    dbContext.Database.Migrate();
+
+    var metaDataService = scopedServices.GetRequiredService<MetaDataService>();
+    await metaDataService.EnsureSeededAsync();
+}
 app.UseCors("AllowAngular");
 
 // Swagger middleware
