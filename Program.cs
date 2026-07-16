@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using MyApp.services;
 using MyApp.Data;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
