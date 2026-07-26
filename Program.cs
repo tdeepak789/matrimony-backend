@@ -27,6 +27,11 @@ builder.Services.AddDbContext<AppDbContext>(options =>
            .UseSnakeCaseNamingConvention()
 );
 
+var cs = builder.Configuration.GetConnectionString("DefaultConnection");
+var builderCs = new Npgsql.NpgsqlConnectionStringBuilder(cs);
+Console.WriteLine($"Host: {builderCs.Host}");
+Console.WriteLine($"Database: {builderCs.Database}");
+Console.WriteLine($"Username: {builderCs.Username}");
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<InterestService>();
 builder.Services.AddScoped<MetaDataService>();
