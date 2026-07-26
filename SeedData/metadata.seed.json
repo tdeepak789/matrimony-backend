@@ -1,0 +1,176 @@
+{
+  "religions": [
+    "Hindu",
+    "Muslim",
+    "Christian",
+    "Sikh",
+    "Buddhist",
+    "Jain",
+    "Parsi",
+    "Jewish",
+    "Other"
+  ],
+  "maritalStatuses": [
+    "Single",
+    "Divorced",
+    "Widowed",
+    "Separated"
+  ],
+  "languages": [
+    "Hindi",
+    "Telugu",
+    "Tamil",
+    "Kannada",
+    "Malayalam",
+    "Marathi",
+    "Bengali",
+    "Punjabi",
+    "English"
+  ],
+  "genders": [
+    "Male",
+    "Female"
+  ],
+  "stars": [
+    "Ashwini",
+    "Bharani",
+    "Krittika",
+    "Rohini",
+    "Mrigashira",
+    "Ardra",
+    "Punarvasu",
+    "Pushya",
+    "Ashlesha",
+    "Magha",
+    "Purva Phalguni",
+    "Uttara Phalguni",
+    "Hasta",
+    "Chitra",
+    "Swati",
+    "Vishakha",
+    "Anuradha",
+    "Jyeshtha",
+    "Mula",
+    "Purva Ashadha",
+    "Uttara Ashadha",
+    "Shravana",
+    "Dhanishta",
+    "Shatabhisha",
+    "Purva Bhadrapada",
+    "Uttara Bhadrapada",
+    "Revati"
+  ],
+  "rasi": [
+    "Kumbha",
+    "Meena",
+    "Mesha",
+    "Vrishabha",
+    "Mithuna",
+    "Karka",
+    "Simha",
+    "Kanya",
+    "Tula",
+    "Vrischika",
+    "Dhanu",
+    "Makara"
+  ],
+  "locations": [
+    {
+      "name": "India",
+      "code": "IN",
+      "displayOrder": 0,
+      "states": [
+        {
+          "name": "Andhra Pradesh",
+          "code": "AP",
+          "displayOrder": 0,
+          "cities": ["Visakhapatnam", "Vijayawada", "Tirupati"],
+          "towns": ["Mangalagiri", "Amalapuram"]
+        },
+        {
+          "name": "Tamil Nadu",
+          "code": "TN",
+          "displayOrder": 1,
+          "cities": ["Chennai", "Coimbatore", "Madurai"],
+          "towns": ["Kumbakonam", "Pollachi"]
+        },
+        {
+          "name": "Karnataka",
+          "code": "KA",
+          "displayOrder": 2,
+          "cities": ["Bengaluru", "Mysuru", "Mangaluru"],
+          "towns": ["Udupi", "Chikkamagaluru"]
+        },
+        {
+          "name": "Kerala",
+          "code": "KL",
+          "displayOrder": 3,
+          "cities": ["Thiruvananthapuram", "Kochi", "Kozhikode"],
+          "towns": ["Alappuzha", "Kottayam"]
+        },
+        {
+          "name": "Maharashtra",
+          "code": "MH",
+          "displayOrder": 4,
+          "cities": ["Mumbai", "Pune", "Nagpur"],
+          "towns": ["Lonavala", "Pandharpur"]
+        }
+      ]
+    }
+  ],
+  "castesByReligion": [
+    {
+      "religion": "Hindu",
+      "castes": [
+        {
+          "name": "Brahmin",
+          "code": "H-BRA",
+          "displayOrder": 0,
+          "subCastes": ["Iyer", "Iyengar", "Niyogi", "Smartha"]
+        },
+        {
+          "name": "Reddy",
+          "code": "H-RED",
+          "displayOrder": 1,
+          "subCastes": ["Panta Reddy", "Kapu Reddy"]
+        },
+        {
+          "name": "Kamma",
+          "code": "H-KAM",
+          "displayOrder": 2,
+          "subCastes": ["Chowdary", "Illuvellani"]
+        },
+        {
+          "name": "Vokkaliga",
+          "code": "H-VOK",
+          "displayOrder": 3,
+          "subCastes": ["Gangadikara", "Morarji"]
+        },
+        {
+          "name": "Nair",
+          "code": "H-NAI",
+          "displayOrder": 4,
+          "subCastes": ["Illam", "Kiriyathil"]
+        },
+        {
+          "name": "Mudaliar",
+          "code": "H-MUD",
+          "displayOrder": 5,
+          "subCastes": ["Thuluva Vellalar", "Saiva Mudaliar"]
+        },
+        {
+          "name": "Chettiar",
+          "code": "H-CHE",
+          "displayOrder": 6,
+          "subCastes": ["Nagarathar", "Devanga Chettiar"]
+        },
+        {
+          "name": "Pillai",
+          "code": "H-PIL",
+          "displayOrder": 7,
+          "subCastes": ["Saiva Pillai", "Nair Pillai"]
+        }
+      ]
+    }
+  ]
+}

@@ -12,15 +12,15 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace matrimony_api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250828205031_initial1")]
-    partial class initial1
+    [Migration("20250904202344_updatedschema")]
+    partial class updatedschema
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.8")
+                .HasAnnotation("ProductVersion", "8.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -65,22 +65,18 @@ namespace matrimony_api.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Bio")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("bio");
 
                     b.Property<string>("Caste")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("caste");
 
                     b.Property<string>("City")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("city");
 
                     b.Property<string>("Country")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("country");
 
@@ -93,12 +89,10 @@ namespace matrimony_api.Migrations
                         .HasColumnName("date_of_birth");
 
                     b.Property<string>("Education")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("education");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("email");
 
@@ -140,17 +134,21 @@ namespace matrimony_api.Migrations
                         .HasColumnName("marital_status");
 
                     b.Property<string>("MotherTongue")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("mother_tongue");
 
                     b.Property<string>("Occupation")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("occupation");
 
-                    b.Property<long>("PhoneNumber")
-                        .HasColumnType("bigint")
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("password_hash");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("text")
                         .HasColumnName("phone_number");
 
                     b.Property<string>("Rasi")
@@ -163,18 +161,21 @@ namespace matrimony_api.Migrations
                         .HasColumnType("text")
                         .HasColumnName("religion");
 
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("role");
+
                     b.Property<string>("Star")
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("star");
 
                     b.Property<string>("State")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("state");
 
                     b.Property<string>("Subcaste")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("subcaste");
 
@@ -183,7 +184,6 @@ namespace matrimony_api.Migrations
                         .HasColumnName("updated_at");
 
                     b.Property<string>("WorkLocation")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("work_location");
 

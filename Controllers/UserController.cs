@@ -4,6 +4,8 @@ using MyApp.Models;
 using System.Collections.Generic;
 using MyApp.services;
 using MyApp.Dtos;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore.Storage;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -16,23 +18,91 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("profiles")]
-    public async Task<ActionResult<List<UserProfile>>> GetUserProfiles()
+    [Authorize]
+    public async Task<ActionResult<PagedResponseDto<UserProfileDto>>> GetUserProfiles(
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10,
+        [FromQuery] string? search = null,
+        [FromQuery] string? gender = null,
+        [FromQuery] string? religion = null,
+        [FromQuery] string? caste = null,
+        [FromQuery] string? maritalStatus = null)
     {
+        string? userRoleClaim = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
+        string? userGenderClaim = User.FindFirst("Gender")?.Value;
+        var (profiles, totalCount) = await _userService.GetPagedUserProfiles(
+            userRoleClaim,
+            userGenderClaim,
+            page,
+            pageSize,
+            search,
+            gender,
+            religion,
+            caste,
+            maritalStatus);
 
-        List<UserProfile> profiles = _userService.GetAllUserProfiles();
-        return Ok(profiles);
+        var userProfileDtos = new List<UserProfileDto>();
+        foreach (var user in profiles)
+        {
+            userProfileDtos.Add(ToUserProfileDto(user));
+        }
+
+        return Ok(new PagedResponseDto<UserProfileDto>
+        {
+            Items = userProfileDtos,
+            TotalCount = totalCount,
+            Page = page,
+            PageSize = pageSize
+        });
 
     }
 
     [HttpGet("profiles/{id}")]
-    public async Task<ActionResult<UserProfile>> GetUserProfile(int id)
+    [Authorize]
+    public async Task<ActionResult<UserProfileDto>> GetUserProfile(int id)
     {
+        // var userIdClaim = User.FindFirst("userId")?.Value;
+        // var userRoleClaim = User.FindFirst("Role")?.Value;
+        // if (userRoleClaim != "Admin") return Forbid();
         var profile = _userService.GetUserProfileById(id);
         if (profile == null)
         {
             return NotFound();
         }
-        return Ok(profile);
+        UserProfileDto userProfileDto = ToUserProfileDto(profile);
+        return Ok(userProfileDto);
+    }
+
+    private UserProfileDto ToUserProfileDto(UserProfile profile)
+    {
+        return new UserProfileDto()
+        {
+            Id = profile.Id,
+            PhoneNumber = profile.PhoneNumber,
+            Email = profile.Email,
+            FirstName = profile.FirstName,
+            LastName = profile.LastName,
+            DateOfBirth = profile.DateOfBirth,
+            Gender = profile.Gender,
+            Bio = profile.Bio,
+            Height = profile.Height,
+            MaritalStatus = profile.MaritalStatus,
+            Religion = profile.Religion,
+            Caste = profile.Caste,
+            Subcaste = profile.Subcaste,
+            Gothram = profile.Gothram,
+            Star = profile.Star,
+            Rasi = profile.Rasi,
+            Education = profile.Education,
+            Occupation = profile.Occupation,
+            Income = profile.Income,
+            WorkLocation = profile.WorkLocation,
+            Country = profile.Country,
+            State = profile.State,
+            City = profile.City,
+            MotherTongue = profile.MotherTongue,
+
+        };
     }
 
     [HttpPost("profiles")]
@@ -42,39 +112,53 @@ public class UserController : ControllerBase
         {
             return BadRequest("User profile data is null.");
         }
-
+        
         var newUserProfile = ToUserProfile(newUserProfileDto);
         if (newUserProfile == null)
         {
             return BadRequest("Invalid user profile data.");
         }
-    
 
-        var createdProfile = _userService.CreateUserProfile(newUserProfile);
-        
-        return CreatedAtAction(nameof(GetUserProfile), new { id = createdProfile.Id }, createdProfile);
+
+        var result = _userService.CreateUserProfile(newUserProfile);
+        if (result.token == null)
+        {
+            return BadRequest("User Profile Already Created");
+        }
+        return Created("", new { token = result.token, userId = result.userId });
     }
 
     [HttpPut("profiles/{id}")]
-    public async Task<ActionResult<UserProfile>> UpdateUserProfile(int id, [FromBody] CreateUserProfileDto updatedUserProfileDto)
+    [Authorize]
+    public async Task<ActionResult<UserProfileDto>> UpdateUserProfile(int id, [FromBody] UserProfileDto updatedUserProfileDto)
     {
+        var userProfileIdClaim = Convert.ToInt32(User.FindFirst("userProfileId")?.Value);
+        var userRoleClaim = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
+
+        if (userProfileIdClaim != id && userRoleClaim != "Admin") return Unauthorized();
+
         if (updatedUserProfileDto == null)
         {
             return BadRequest("User profile data is null.");
         }
 
-        var existingProfile = _userService.UpdateUserProfile(id,updatedUserProfileDto);
-        if (existingProfile == null)
+        var updatedProfile = await _userService.UpdateUserProfile(id, updatedUserProfileDto);
+        if (updatedProfile  == null)
         {
             return NotFound();
         }
-        return Ok(existingProfile);
-        
+        return Ok(ToUserProfileDto(updatedProfile));
+
     }
 
     [HttpDelete("profiles/{id}")]
+    [Authorize]
     public async Task<IActionResult> DeleteUserProfile(int id)
     {
+        var userProfileIdClaim = Convert.ToInt32(User.FindFirst("userProfileId")?.Value);
+        var userRoleClaim = User.FindFirst("Role")?.Value;
+
+        if (userProfileIdClaim != id && userRoleClaim != "Admin") return Unauthorized();
         // Implement delete logic if needed
         bool isSuccess = await _userService.DeleteUserProfile(id);
         if (!isSuccess)
@@ -86,13 +170,16 @@ public class UserController : ControllerBase
 
     private static UserProfile ToUserProfile(CreateUserProfileDto dto)
     {
-        if (dto == null) return null;
+        if (dto == null) throw new Exception();
 
         return new UserProfile
         {
+            PhoneNumber = dto.PhoneNumber,
             Email = dto.Email,
             FirstName = dto.FirstName,
             LastName = dto.LastName,
+            PasswordHash = dto.Password,
+            Role = "User",
             DateOfBirth = dto.DateOfBirth,
             Gender = dto.Gender,
             Bio = dto.Bio,
@@ -112,7 +199,6 @@ public class UserController : ControllerBase
             State = dto.State,
             City = dto.City,
             MotherTongue = dto.MotherTongue,
-            PhoneNumber = dto.PhoneNumber,
 
             // Initialize timestamps
             CreatedAt = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
